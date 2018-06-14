@@ -9,6 +9,8 @@ __int64 CounterStart = 0;
 
 using namespace std;
 
+//=============================================== ESTRUTURA GLOBAIS
+
 struct dado{
     int room_id;
     int host_id;
@@ -24,8 +26,7 @@ struct dado{
     char property_type[50];
 };
 
-void StartCounter()
-{
+void StartCounter(){
     LARGE_INTEGER li;
     if(!QueryPerformanceFrequency(&li))
         printf("QueryPerformanceFrequency Failed.\n");
@@ -34,14 +35,90 @@ void StartCounter()
     CounterStart = li.QuadPart;
 }
 
-double GetCounter()
-{
+double GetCounter(){
     LARGE_INTEGER li;
     QueryPerformanceCounter(&li);
     return (double)(li.QuadPart - CounterStart) / PCFreq;
 }
 
-//===============================================ESTRUTURA ARVORE
+dado *openFile(int n, int op){
+
+
+    char cabecalho1[50];
+    char cabecalho2[50];
+    char cabecalho3[50];
+    char cabecalho4[50];
+    char cabecalho5[50];
+    char cabecalho6[50];
+    char cabecalho7[50];
+    char cabecalho8[50];
+    char cabecalho9[50];
+    char cabecalho10[50];
+    char cabecalho11[50];
+    char cabecalho12[50];
+
+    dado *airbnb = (dado*)calloc(n, sizeof(dado));
+
+    if(airbnb == NULL){
+        cout << "não há memoria suficiente";
+    } else {
+        //inicia abertura do arquivo em modo leitura
+        FILE *arq;
+        switch(op){
+            case 1:
+                arq = fopen("dados_airbnb_crescente.txt", "r");
+            break;
+
+            case 2:
+                arq = fopen("dados_airbnb.txt", "r");
+            break;
+        }
+        int i = 0;
+
+        for(int a = 0; a <= n; a++){
+            //na primeira repetição atribui os valores de cabeçalho
+            if(a == 0){
+                fscanf
+                    ( arq,
+                        "%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\n]\n",
+                        &cabecalho1, &cabecalho2, &cabecalho3,
+                        &cabecalho4, &cabecalho5, &cabecalho6,
+                        &cabecalho7, &cabecalho8, &cabecalho9,
+                        &cabecalho10,&cabecalho11, &cabecalho12
+                    );
+            }
+            //depois da primeira repetição lê os valores e quarda na Struct
+            if(a != 0 ){
+                fscanf
+                    ( arq, "%i\t%i\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%i.0\t%[^\n]\n",
+                        &airbnb[i].room_id, &airbnb[i].host_id, &airbnb[i].room_type,
+                        &airbnb[i].country, &airbnb[i].city, &airbnb[i].neighborhood,
+                        &airbnb[i].reviews, &airbnb[i].overall_satisfaction, &airbnb[i].accommodates,
+                        &airbnb[i].bedrooms, &airbnb[i].price, &airbnb[i].property_type
+                    );
+
+                i++;
+            }
+        }
+        fclose(arq);
+
+    }
+    return airbnb;
+}
+
+void Imprimir_pesquisa(dado airbnb){
+printf("Dados da pesquisa:\nRoom_id: %i\nHost_id: %i\nRoom_type: %s\nCountry: %s\nCity: %s\nNeighborhood: %s\nReviews: %s\nOverall_satisfaction: %s\nAccommodates: %s\nBedrooms: %s\nPrice: %i\nProperty_type: %s\t\n",
+                    airbnb.room_id, airbnb.host_id, airbnb.room_type,
+                    airbnb.country, airbnb.city, airbnb.neighborhood,
+                    airbnb.reviews, airbnb.overall_satisfaction, airbnb.accommodates,
+                    airbnb.bedrooms, airbnb.price, airbnb.property_type);
+
+}
+
+//===============================================
+
+//=============================================== ESTRUTURA ARVORE
+
 struct No{
     dado dado;
     No *pai, *esq, *dir;
@@ -125,82 +202,7 @@ dado falso ={0,0,0,0,0,0,0,0,0,0,0,0};
 
 //===============================================
 
-dado *openFile(int n, int op){
-
-
-    char cabecalho1[50];
-    char cabecalho2[50];
-    char cabecalho3[50];
-    char cabecalho4[50];
-    char cabecalho5[50];
-    char cabecalho6[50];
-    char cabecalho7[50];
-    char cabecalho8[50];
-    char cabecalho9[50];
-    char cabecalho10[50];
-    char cabecalho11[50];
-    char cabecalho12[50];
-
-    dado *airbnb = (dado*)calloc(n, sizeof(dado));
-
-    if(airbnb == NULL){
-        cout << "não há memoria suficiente";
-    } else {
-        //inicia abertura do arquivo em modo leitura
-        FILE *arq;
-        switch(op){
-            case 1:
-                arq = fopen("dados_airbnb_crescente.txt", "r");
-            break;
-
-            case 2:
-                arq = fopen("dados_airbnb.txt", "r");
-            break;
-        }
-        int i = 0;
-
-        for(int a = 0; a <= n; a++){
-            //na primeira repetição atribui os valores de cabeçalho
-            if(a == 0){
-                fscanf
-                    ( arq,
-                        "%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\n]\n",
-                        &cabecalho1, &cabecalho2, &cabecalho3,
-                        &cabecalho4, &cabecalho5, &cabecalho6,
-                        &cabecalho7, &cabecalho8, &cabecalho9,
-                        &cabecalho10,&cabecalho11, &cabecalho12
-                    );
-            }
-            //depois da primeira repetição lê os valores e quarda na Struct
-            if(a != 0 ){
-                fscanf
-                    ( arq, "%i\t%i\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%[^\t]\t%i.0\t%[^\n]\n",
-                        &airbnb[i].room_id, &airbnb[i].host_id, &airbnb[i].room_type,
-                        &airbnb[i].country, &airbnb[i].city, &airbnb[i].neighborhood,
-                        &airbnb[i].reviews, &airbnb[i].overall_satisfaction, &airbnb[i].accommodates,
-                        &airbnb[i].bedrooms, &airbnb[i].price, &airbnb[i].property_type
-                    );
-
-                i++;
-            }
-        }
-        fclose(arq);
-
-    }
-    return airbnb;
-}
-
-//----------------------------------------------------------- FUNCOES DE PESQUISA
-
-void Imprimir_pesquisa(dado airbnb){
-printf("Dados da pesquisa:\nRoom_id: %i\nHost_id: %i\nRoom_type: %s\nCountry: %s\nCity: %s\nNeighborhood: %s\nReviews: %s\nOverall_satisfaction: %s\nAccommodates: %s\nBedrooms: %s\nPrice: %i\nProperty_type: %s\t\n",
-                    airbnb.room_id, airbnb.host_id, airbnb.room_type,
-                    airbnb.country, airbnb.city, airbnb.neighborhood,
-                    airbnb.reviews, airbnb.overall_satisfaction, airbnb.accommodates,
-                    airbnb.bedrooms, airbnb.price, airbnb.property_type);
-
-}
-
+//=============================================== FUNCOES DE PESQUISA SEQUENCIAL E BINARIA
 
 dado Pesquisa_sequencial(dado *v, int chave){
 dado falso ={0,0,0,0,0,0,0,0,0,0,0,0};
@@ -241,7 +243,6 @@ maior=ma;
 return me;
 }
 
-
 dado Pesquisa_binaria(dado *v,int n, int chave){
 dado falso ={0,0,0,0,0,0,0,0,0,0,0,0};
     int inicio = 0, fim = n-1, meio;
@@ -266,6 +267,10 @@ dado falso ={0,0,0,0,0,0,0,0,0,0,0,0};
 
     return falso;
 }
+
+//===============================================
+
+//=============================================== FUNCOES DE PESQUISA NUMEROS CIDADES
 
 struct celula_cidade{
     char nome[50];
@@ -330,10 +335,12 @@ void Contador_de_cidades(dado *v, lista_de_cidades * l, int n){
 
 }
 
-//-----------------------------------------------------PROCEDIMENTOS PARA HASH
+//===============================================
+
+//=============================================== PROCEDIMENTOS PARA HASH
 
 struct CelulaH{
-    int dado;
+    dado data;
     CelulaH *prox;
 };
 
@@ -341,7 +348,6 @@ struct ListaH{
     CelulaH *inicio, *fim;
     int tam;
 };
-
 
 void InicializarH(ListaH *lista){
 
@@ -353,17 +359,15 @@ void InicializarH(ListaH *lista){
     lista->tam = 0;
 }
 
-
 bool VaziaH(ListaH *lista){
     return lista->inicio == lista->fim;
 }
 
-
-void InserirH(ListaH *lista, int dado){
+void InserirH(ListaH *lista, dado x){
 
 
     CelulaH *temp = (CelulaH*) malloc(sizeof(CelulaH));
-    temp->dado = dado;
+    temp->data = x;
     temp->prox = NULL;
 
     lista->fim->prox = temp;
@@ -373,66 +377,24 @@ void InserirH(ListaH *lista, int dado){
     lista->tam++;
 }
 
-
-int RemoverH(ListaH *lista, int pos){
-
-
-    if(pos < 1 || pos > lista->tam)
-        return -1;
-
-
-    CelulaH *CelAnt = lista->inicio;
-
-
-    for(int i=0; i<pos-1; i++) CelAnt=CelAnt->prox;
-
-
-    CelulaH *temp = CelAnt->prox;
-
-
-    CelAnt->prox = temp->prox;
-
-
-    int dado = temp->dado;
-
-    free(temp);
-
-    lista->tam--;
-
-
-    return dado;
-}
-
-
 void ImprimirH(ListaH *lista){
     for(CelulaH *temp = lista->inicio->prox; temp!=NULL; temp=temp->prox){
-        printf("%i ", temp->dado);
+        printf(" %i -", temp->data.room_id);
     }
     printf("\n");
 }
-
 
 int TamanhoH(ListaH *lista){
     return lista->tam;
 }
 
-
-void FinalizarH(ListaH *lista){
-
-    while(!VaziaH(lista))
-        RemoverH(lista,1);
-
-
-    free(lista->inicio);
-}
-
-
-int PesquisarH(ListaH *lista, int X){
+dado PesquisarH(ListaH *lista, int X){
+dado falso ={0,0,0,0,0,0,0,0,0,0,0,0};
     for(CelulaH *temp = lista->inicio->prox; temp!=NULL; temp=temp->prox){
-        if(temp->dado == X)
-            return X;
+        if(temp->data.room_id == X)
+            return temp->data;
     }
-    return -1;
+    return falso;
 }
 
 int FuncaoHash(int X, int N){
@@ -447,31 +409,38 @@ void InicializarHash(ListaH *tabela[], int N){
     }
 }
 
-void InserirHash(ListaH *tabela[], int N, int X){
+void InserirHash(ListaH *tabela[], int N, dado x){
 
-    int pos = FuncaoHash(X,N);
-    InserirH(tabela[pos], X);
+    int pos = FuncaoHash(x.room_id , N);
+    InserirH(tabela[pos], x);
 
 }
 
-int PesquisarHash(ListaH *tabela[], int N, int X){
+dado PesquisarHash(ListaH *tabela[], int N, int X){
 
     int pos = FuncaoHash(X,N);
 
-    int consulta = PesquisarH(tabela[pos], X);
+    dado consulta = PesquisarH(tabela[pos], X);
 
-    if(consulta != -1)
+    return consulta;/*
+    if(consulta != {0,0,0,0,0,0,0,0,0,0,0,0})
         return pos;
 
     return -1;
-
+*/
 }
 
-/*void ArquivoToHash(Lista *tabela[],dado *v){
-    for ( int i=0; i<128001; i++){
-        InserirHash(*tabela[],128001,i);
+void ImprimirHash(ListaH *tabela[], int N){
+    int j=0;
+    for(int i=0; i<N; i++){
+        printf("%i|\t", i);
+        ImprimirH(tabela[i]);
     }
-*/
+    printf("\n====================\n");
+}
+
+//===============================================
+
 
 int main(){
 
@@ -480,12 +449,14 @@ setlocale(LC_ALL,"");
     lista_de_cidades * cidades = (lista_de_cidades*) malloc(sizeof(lista_de_cidades));
     inicializa_lista_cidade(cidades);
 
-    int tam=128001;
-    ListaH **TabelaHash = (ListaH **)calloc(tam,sizeof(ListaH *));
-    InicializarHash(TabelaHash, tam);
+    int fator=65521;    // potencia de 2 abaixo do tamanho total (total= 12800 -> potencia de 2 mais proxima 65536 -> numero primo abaixo 65521), como Sedgewick sugere
+    ListaH **TabelaHash = (ListaH **)calloc(fator,sizeof(ListaH *));
+    InicializarHash(TabelaHash, fator);
 
     ArvBin *arvore = (ArvBin*)malloc(sizeof(ArvBin));
-    int  op=0, chave,ma=0, me,pos;
+    Inicializa(arvore);
+
+    int  op=0, chave,ma=0, me, pos, continuar;
     char chavosa[50];
     dado *v, aux;
     double tempoEmMilissegundo = 0.0000000;
@@ -506,9 +477,15 @@ setlocale(LC_ALL,"");
                 break;
             }
 
+            if(op < 1 || op > 6){
+                cout<<"\t\tOpcao invalida, digite novamente...\n";
+            }
+
         switch(op){
             case 1:
                 cout<<"\n\tPESQUISA SEQUENCIAL:\n";
+                do{
+
                 cout<<"Room_id? ";
                 cin>>chave;
                 v = openFile(128001, 2);
@@ -519,10 +496,25 @@ setlocale(LC_ALL,"");
                         Imprimir_pesquisa(aux);
                     }
                 cout<<"\nTempo para realizar a pesquisa (MS): "<<tempoEmMilissegundo;
-                break;
+                cout<<endl;
+                cout<<"\nPesquisar novamente (Sequencial)? [1] Sim; [2] Nao. ";
+
+                do{
+                    cout<<"\nEntrada:  ";
+                    cin>>continuar;
+                    if(((continuar < 1) || (continuar > 2))){
+                        cout<<"Opçao invalida, digite novamente...";
+                    }
+                    }while((continuar < 1) || (continuar > 2));
+                }while(continuar!=2);
+
+                cout<<endl<<endl;
+            break;
 
             case 2:
                 cout<<"\n\tPESQUISA BINARIA:\n";
+                do{
+
                 cout<<"Room_id? ";
                 cin>>chave;
                 v = openFile(128001, 1);
@@ -533,10 +525,25 @@ setlocale(LC_ALL,"");
                         Imprimir_pesquisa(aux);
                     }
                 cout<<"\nTempo para realizar a pesquisa (MS): "<<tempoEmMilissegundo;
-                break;
+                cout<<endl;
+                cout<<"\nPesquisar novamente (Binaria)? [1] Sim; [2] Nao. ";
+
+                do{
+                    cout<<"\nEntrada:  ";
+                    cin>>continuar;
+                    if(((continuar < 1) || (continuar > 2))){
+                        cout<<"Opçao invalida, digite novamente...";
+                    }
+                    }while((continuar < 1) || (continuar > 2));
+                }while(continuar!=2);
+
+                cout<<endl<<endl;
+            break;
 
             case 3:
                 cout<<"\n\tPESQUISA EM ARVORE BINARIA\n";
+                do{
+
                 cout<<"Room_id? ";
                 cin>>chave;
                 v = openFile(128001, 2);
@@ -551,39 +558,70 @@ setlocale(LC_ALL,"");
                         Imprimir_pesquisa(aux);
                     }
                 cout<<"\nTempo para realizar a pesquisa (MS): "<<tempoEmMilissegundo;
+                cout<<endl;
+                cout<<"\nPesquisar novamente (Arvore)? [1] Sim; [2] Nao. ";
 
-                break;
+                do{
+                    cout<<"\nEntrada:  ";
+                    cin>>continuar;
+                    if(((continuar < 1) || (continuar > 2))){
+                        cout<<"Opçao invalida, digite novamente...";
+                    }
+                    }while((continuar < 1) || (continuar > 2));
+                }while(continuar!=2);
+
+                cout<<endl<<endl;
+            break;
 
             case 4:
                 cout<<"\n\tPESQUISA EM TABELA HASH\n";
+                do{
+
                 cout<<"Room_id? ";
                 cin.ignore();
                 cin>>chave;
                 v = openFile(128001, 2);
-                for (int i=0;i<128001;i++){
-                    InserirHash(TabelaHash,tam,v[i].room_id);
+                for(int i=0; i< 128001; i++){
+                    InserirHash(TabelaHash, fator, v[i]);
                 }
                 StartCounter();
-                pos=PesquisarHash(TabelaHash, tam, chave);
-
+                aux=PesquisarHash(TabelaHash, fator, chave);
+                //pos=PesquisarHash(TabelaHash, fator, chave);
                 tempoEmMilissegundo = GetCounter();
-                    if(aux.room_id!=0){
+                    if(aux.room_id==0){
+                        cout<<"Elemento nao encontrado.\n";
+                    } else {
                         Imprimir_pesquisa(aux);
                     }
                 cout<<"\nTempo para realizar a pesquisa (MS): "<<tempoEmMilissegundo;
-                break;
+                cout<<endl;
+                cout<<"\nPesquisar novamente (Hash)? [1] Sim; [2] Nao. ";
 
-                break;
+                do{
+                    cout<<"\nEntrada:  ";
+                    cin>>continuar;
+                    if(((continuar < 1) || (continuar > 2))){
+                        cout<<"Opçao invalida, digite novamente...";
+                    }
+                    }while((continuar < 1) || (continuar > 2));
+                }while(continuar!=2);
+
+                cout<<endl<<endl;
+            break;
 
             case 5:
                 cout<<"\n\t QUANTIDADE QUARTOS DISPONIVEIS EM UMA CIDADE\n";
                 v = openFile(128001, 1);
                 Contador_de_cidades(v, cidades, 128000);
-                break;
+
+                cout<<endl<<endl;
+            break;
 
             case 6:
 
                 cout<<"\n\tQUARTO MAIS CARO E MAIS BARATO DE DETERMINADA CIDADE\n";
+                do{
+
                 cout<<"Cidade?\n-> ";
                 cin.ignore();
                 gets(chavosa);
@@ -594,10 +632,21 @@ setlocale(LC_ALL,"");
                 cout<<"Mais Caro  = "<<ma<<endl
                     <<"Mais Barato= "<<me<<endl;
 
-                break;
+                cout<<"\nPesquisar novamente (Quarto)? [1] Sim; [2] Nao. ";
+                do{
+                    cout<<"\nEntrada:  ";
+                    cin>>continuar;
+                    if(((continuar < 1) || (continuar > 2))){
+                        cout<<"Opçao invalida, digite novamente...";
+                    }
+                    }while((continuar < 1) || (continuar > 2));
+                }while(continuar!=2);
+
+                cout<<endl<<endl;
+            break;
 
         }
-    }while((op<1)||(op>7));
+    }while(op!=7);
 
     free(TabelaHash);
     free(arvore);
