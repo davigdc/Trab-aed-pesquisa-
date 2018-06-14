@@ -6,7 +6,6 @@
 double PCFreq = 0.0;
 __int64 CounterStart = 0;
 
-
 using namespace std;
 
 //=============================================== ESTRUTURA GLOBAIS
@@ -185,9 +184,12 @@ void Imprimir_Arvore(No *no){
 
 dado Pesquisar(ArvBin *arvore, int chave){
 dado falso ={0,0,0,0,0,0,0,0,0,0,0,0};
+    int contpesq=0;
     No *temp = arvore->raiz;
     while(temp!=NULL){
+        contpesq++;
         if(temp->dado.room_id == chave){
+            cout<<"Buscas necessárias: "<<contpesq<<endl;
             return temp->dado;
         }else{
 
@@ -197,6 +199,7 @@ dado falso ={0,0,0,0,0,0,0,0,0,0,0,0};
                 temp = temp->dir;
         }
     }
+    cout<<"Buscas necessárias: "<<contpesq<<endl;
     return falso;
 }
 
@@ -206,31 +209,38 @@ dado falso ={0,0,0,0,0,0,0,0,0,0,0,0};
 
 dado Pesquisa_sequencial(dado *v, int chave){
 dado falso ={0,0,0,0,0,0,0,0,0,0,0,0};
+int contpesq=0;
     for(int i=0; i<128001; i++){
+        contpesq++;
         if(v[i].room_id==chave){
             cout<<"Registro encontrado!\n";
+            cout<<"Buscas necessárias: "<<contpesq<<endl;
             return v[i];
         }
     }
 cout<<"Registro nao encontrado";
+cout<<"Buscas necessárias: "<<contpesq<<endl;
 return falso;
 }
 
 int Pesquisa_sequencial_cidade(dado *v, char *chave, int& maior){
 int cont=0;
-int ma=0;
-int me=0;
+int contpesq=0;
+int ma=v[0].price;
+int me=v[0].price;
 
     for(int i=0; i<128001; i++){
 
-        if(strcmp(v[i].city,chave)==0){
+        contpesq++;
 
+        if(strcmp(v[i].city,chave)==0){
+/*
             if (cont==0){
                 ma=v[i].price;
                 me=v[i].price;
                 cont++;
             }
-
+*/
             if(ma<v[i].price)
                 ma=v[i].price;
 
@@ -240,20 +250,23 @@ int me=0;
     }
 
 maior=ma;
+cout<<"Buscas necessárias: "<<contpesq<<endl;
+
 return me;
 }
 
 dado Pesquisa_binaria(dado *v,int n, int chave){
 dado falso ={0,0,0,0,0,0,0,0,0,0,0,0};
     int inicio = 0, fim = n-1, meio;
-
+    int contpesq=0;
 
     while(inicio <= fim){
-
+        contpesq++;
         meio=(inicio+fim)/2;
 
         if(chave == v[meio].room_id){
         cout<<"Registro encontrado!\n";
+        cout<<"Buscas necessárias: "<<contpesq<<endl;
             return v[meio];
         }
 
@@ -264,13 +277,13 @@ dado falso ={0,0,0,0,0,0,0,0,0,0,0,0};
             inicio = meio+1;
         }
     }
-
+    cout<<"Buscas necessárias: "<<contpesq<<endl;
     return falso;
 }
 
 //===============================================
 
-//=============================================== FUNCOES DE PESQUISA NUMEROS CIDADES
+//=============================================== FUNCOES DE PESQUISA NUMERO QUARTOS NAS CIDADES
 
 struct celula_cidade{
     char nome[50];
@@ -390,8 +403,11 @@ int TamanhoH(ListaH *lista){
 
 dado PesquisarH(ListaH *lista, int X){
 dado falso ={0,0,0,0,0,0,0,0,0,0,0,0};
+    int contpesq=0;
     for(CelulaH *temp = lista->inicio->prox; temp!=NULL; temp=temp->prox){
+        contpesq++;
         if(temp->data.room_id == X)
+            cout<<"Buscas necessárias na lista: "<<contpesq<<endl;
             return temp->data;
     }
     return falso;
@@ -417,11 +433,11 @@ void InserirHash(ListaH *tabela[], int N, dado x){
 }
 
 dado PesquisarHash(ListaH *tabela[], int N, int X){
-
+    int contpesq=0;
     int pos = FuncaoHash(X,N);
-
     dado consulta = PesquisarH(tabela[pos], X);
-
+    contpesq++;
+    cout<<"Buscas necessárias na tabela: "<<contpesq<<endl;
     return consulta;/*
     if(consulta != {0,0,0,0,0,0,0,0,0,0,0,0})
         return pos;
