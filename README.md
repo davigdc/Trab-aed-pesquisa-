@@ -1,6 +1,5 @@
 Membros grupo: Davi G, Diego R, Gilson J, Juan L, Bruno V
 
-
 	Legenda variaveis:
 
 * --> int
@@ -32,9 +31,7 @@ Membros grupo: Davi G, Diego R, Gilson J, Juan L, Bruno V
 	*** PesquisarHash: esta funcao recebe como parametro a tabela hash, e a chave de busca, ela usa a *FuncaoHash para definir em qual linha da tabela o elemento esta, definida a linha, a funcao chama uma pesquisa de lista (***PesquisarH), para que caso haja colisao na insercao dos numeros esta procure na lista o elemento procurado, reduzindo bastante o tempo de busca.    
 
 //========= Pesquisa Quantidade de quartos disponiveis nas cidades
-	***Contador_de_cidades:		
-
-
+	***Contador_de_cidades:	recebe o vetor do tipo dado, uma lista de cidades, faz uma varredura sequencial no vetor iterando o nome da cidade e compara na lista de cidades se ja há registro do nome da cidade, se houver registro adiciona na celula_cidade.tam +1, caso contrário adiciona um novo elemento na lista com tamanho 1 e nome da cidade
 
 //========= Pesquisa sequencial preco quarto
 	* Pesquisa_sequencial_cidade: recebe o vetor do tipo dado, e faz a comparacao sequencial dos valores (campo price), retornando o valor do menor e maior valor do quarto.
